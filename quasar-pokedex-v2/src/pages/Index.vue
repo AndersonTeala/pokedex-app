@@ -1,20 +1,24 @@
 <template>
   <q-page class="flex flex-center">
-    <div class="q-pa-md row items-start q-gutter-md">
-      <q-card
-      class="my-card bg-"
-      v-for="(pokemons, index) in pokemons"
-			:key="++ index"
-      >
-        <img
-          :src="pokemonsImages + index + '.svg'"
-        />
-        <q-card-section>
-          <div class="text-subtitle2">{{ pokemons.name }}</div>
-          <div class="text-subtitle2">#{{ index }}</div>
-          <div class="text-subtitle2">Color: {{ species + index }}</div>
-        </q-card-section>
-      </q-card>
+    <div class="row q-pa-md justify-center">
+			<div class="row row-sm-8 justify-center q-gutter-sm">
+        <q-card
+        style="width: 150px;"
+        class="card-post q-mb-md"
+        flat bordered
+        v-for="(pokemons, index) in pokemons"
+        :key="++ index"
+        >
+          <img
+            style="height: 200px;"
+            :src="pokemonsImages + index + '.svg'"
+          />
+          <q-card-section>
+            <div class="text-subtitle2">{{ pokemons.name }}</div>
+            <div class="text-subtitle2">#{{ index }}</div>
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
   </q-page>
 </template>
@@ -70,6 +74,6 @@ export default {
 }
 
 .my-card img {
-  width: 150px;
+
 }
 </style>
