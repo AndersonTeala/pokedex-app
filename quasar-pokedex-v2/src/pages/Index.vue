@@ -1,69 +1,61 @@
 <template>
-  <q-page class="flex flex-center">
-    <div class="row q-pa-md justify-center">
-			<div class="row row-sm-8 justify-center q-gutter-sm">
-        <q-card
-        style="width: 150px;"
-        class="card-post q-mb-md"
-        flat bordered
-        v-for="(pokemons, index) in pokemons"
-        :key="++ index"
-        >
-          <img
-            style="height: 200px;"
-            :src="pokemonsImages + index + '.svg'"
-          />
-          <q-card-section>
-            <div class="text-subtitle2">{{ pokemons.name }}</div>
-            <div class="text-subtitle2">#{{ index }}</div>
-          </q-card-section>
-        </q-card>
+  <q-page padding>
+      <q-input
+        class="bg-yellow"
+        v-model="busca"
+        debounce="500"
+        filled
+        placeholder="Pesquisar pokemon"
+      >
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
+      <div class="col">
+        <div v-for="(poke, index) in resultadoBusca" :key="poke.url" >
+          <Pokemon :name="poke.name" :url="poke.url" :num="index+1"/>
+        </div>
       </div>
-    </div>
   </q-page>
 </template>
 
 <script>
+import Pokemon from '../components/Pokemon.vue'
+
+//import Pokemon from './components/Pokemon'
 
 export default {
+  components: { Pokemon },
 
   name: 'PageIndex',
   data () {
     return {
-      index: [],
       pokemons: [],
-      colorUrl: [],
-      species: 'https://pokeapi.co/api/v2/pokemon-species/',
-      pokemonsImages: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/',
-      images: [],
+      busca: ''
     }
   },
   mounted(){
     this.getPokemon()
-    this.getColor()
   },
   methods: {
     getPokemon(){
-      this.$axios.get('https://pokeapi.co/api/v2/pokemon')
+      this.$axios.get('https://pokeapi.co/api/v2/pokemon?limit=151&offset=0')
       .then((response) => {
         //console.log(response)
-        //CAMINHO DOS POKEMONS
         this.pokemons = response.data.results
-        //console.log(this.pokemons)
       }).catch((err) => {
         console.log(err)
       })
     },
-    getColor(){
-      this.$axios.get(this.species + this.index)
-      .then((response) => {
-        //this.color =
-        this.colorUrl = response.data.results
-        console.log(this.colorUrl)
-      }).catch((error) => {
-        console.log(error)
-      })
-    },
+  },
+  computed: {
+    resultadoBusca() {
+      if(this.busca == '' || this.busca == ' '){
+        return this.pokemons
+      }else{
+        return this.pokemons.filter(pokemon => pokemon.name == this.busca)
+      }
+    }
   }
 }
 </script>
