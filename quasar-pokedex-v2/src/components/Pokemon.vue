@@ -148,8 +148,19 @@ export default {
             this.pokemon.color = res.data.color.name
             break;
         }
+        this.getEvolution(res.data.evolution_chain.url)
+        // if(this.pokemon.order == 1){
+        //   console.log(res)
+        // }
+      })
+    },
+    getEvolution(url){
+      axios.get(url)
+      .then((res) => {
+        this.pokemon.evolu = res.data
+        this.pokemon.evolu_1 = res.data.chain.evolves_to[0].species.name
         if(this.pokemon.order == 1){
-          // console.log(res)
+          // console.log(this.pokemon.evolu_1)
         }
       })
     },
