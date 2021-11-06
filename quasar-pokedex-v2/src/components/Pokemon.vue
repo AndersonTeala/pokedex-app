@@ -70,7 +70,8 @@
           </q-tab-panel>
           <!-- TAB HAB -->
           <q-tab-panel :class="'bg-' + pokemon.color + '-9'" name="hab">
-            HAB
+            <Abilities
+              :pokemon="pokemon"/>
           </q-tab-panel>
           <!-- TAB EVO -->
           <q-tab-panel :class="'bg-' + pokemon.color + '-9'" name="evo">
@@ -87,10 +88,12 @@
 <script>
 import axios from 'axios'
 import Stats from 'components/Pokemon/Stats'
+import Abilities from 'components/Pokemon/Abilities'
 export default {
   props: ['url', 'num', 'name'],
   components: {
-    Stats
+    Stats,
+    Abilities
   },
   data(){
     return {
@@ -120,6 +123,7 @@ export default {
       this.pokemon.stats = response.data.stats
       this.pokemon.order = response.data.order
       this.pokemon.type = response.data.types
+      this.pokemon.abilities = response.data.abilities
       if(this.pokemon.order == 1){
         // console.log(response)
       }
@@ -145,7 +149,7 @@ export default {
             break;
         }
         if(this.pokemon.order == 1){
-          console.log(res)
+          // console.log(res)
         }
       })
     },
