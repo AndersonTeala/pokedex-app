@@ -43,7 +43,7 @@ export default {
     }
   },
   mounted(){
-    this.getPokemon('https://pokeapi.co/api/v2/pokemon?limit=10&offset=0')
+    this.getPokemon('https://pokeapi.co/api/v2/pokemon?limit=12&offset=0')
   },
   methods: {
     getPokemon(url){
