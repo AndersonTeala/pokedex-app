@@ -4,10 +4,12 @@
     :class="'card-post bg-' + pokemon.color"
     @click="test(pokemon)"
   >
-    <img
-      style="height: 160px; width: 160px"
-      :src="pokemon.image"
+    <q-card-section class="col q-pa-sm">
+      <img
+        style="width: 160px"
+        :src="pokemon.image"
     />
+    </q-card-section>
     <q-card-section class="col q-pa-sm">
       <div class="text-capitalize text-white">{{ name }}</div>
     </q-card-section>
@@ -56,7 +58,7 @@
         >
           <q-tab name="stats" icon="catching_pokemon" label="Status" />
           <q-tab name="hab" icon="catching_pokemon" label="Habilidades" />
-          <q-tab name="evo" icon="catching_pokemon" label="Evolução" />
+          <!-- <q-tab name="evo" icon="catching_pokemon" label="Evolução" /> -->
         </q-tabs>
       </q-card-section>
 
@@ -74,9 +76,10 @@
               :pokemon="pokemon"/>
           </q-tab-panel>
           <!-- TAB EVO -->
-          <q-tab-panel :class="'bg-' + pokemon.color + '-9'" name="evo">
-            EVO
-          </q-tab-panel>
+          <!-- <q-tab-panel :class="'bg-' + pokemon.color + '-9'" name="evo">
+            <Evolu
+              :pokemon="pokemon"/>
+          </q-tab-panel> -->
         </q-tab-panels>
       </q-card-section>
 
@@ -89,11 +92,13 @@
 import axios from 'axios'
 import Stats from 'components/Pokemon/Stats'
 import Abilities from 'components/Pokemon/Abilities'
+import Evolu from 'components/Pokemon/Evolu'
 export default {
   props: ['url', 'num', 'name'],
   components: {
     Stats,
-    Abilities
+    Abilities,
+    Evolu
   },
   data(){
     return {
@@ -105,7 +110,11 @@ export default {
         color: '',
         name: this.name,
         order: null,
-        type: []
+        type: [],
+        evolu_1: '',
+        evolu_2: '',
+        evolu_1_image: '',
+        evolu_2_image: ''
       },
       dialog: false,
       maximizedToggle: true,
@@ -148,19 +157,27 @@ export default {
             this.pokemon.color = res.data.color.name
             break;
         }
-        this.getEvolution(res.data.evolution_chain.url)
-        // if(this.pokemon.order == 1){
-        //   console.log(res)
-        // }
+        // this.getEvolution(res.data.evolution_chain.url)
+        if(this.pokemon.order == 1){
+          // console.log(res)
+        }
       })
     },
     getEvolution(url){
       axios.get(url)
       .then((res) => {
         this.pokemon.evolu = res.data
-        this.pokemon.evolu_1 = res.data.chain.evolves_to[0].species.name
-        if(this.pokemon.order == 1){
-          // console.log(this.pokemon.evolu_1)
+        if(res.data.chain.evolves_to.length > 0){
+          this.pokemon.evolu_2 = res.data.chain.evolves_to[0].species.name
+          this.pokemon.evolu_3 = res.data.chain.evolves_to[0].evolves_to[0].species.name
+        }
+        this.pokemon.evolu_2_image = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'
+        let lhu = this.pokemon.image.replace('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/', '')
+        let lhu_2 = lhu.replace('.png', '')
+        this.pokemon.evolu_2_image = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/' + (parseInt(lhu_2) + parseInt(1)) +'.png'
+        this.pokemon.evolu_3_image = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/' + (parseInt(lhu_2) + parseInt(2)) +'.png'
+        if(this.pokemon.order == 2){
+          // console.log(this.pokemon)
         }
       })
     },

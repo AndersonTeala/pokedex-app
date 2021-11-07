@@ -6,13 +6,14 @@
         debounce="500"
         filled
         placeholder="Pesquisar pokemon"
+        @input="resultadoBusca"
       >
         <template v-slot:append>
           <q-icon name="search" />
         </template>
       </q-input>
       <div class="row justify-center items-center text-center q-col-gutter-sm q-mt-sm">
-        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" v-for="(poke, index) in pokemons" :key="poke.url" >
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" v-for="(poke, index) in resultadoBusca" :key="poke.url" >
           <Pokemon :name="poke.name" :url="poke.url" :num="index+1"/>
         </div>
       </div>
@@ -43,7 +44,7 @@ export default {
     }
   },
   mounted(){
-    this.getPokemon('https://pokeapi.co/api/v2/pokemon?limit=12&offset=0')
+    this.getPokemon('https://pokeapi.co/api/v2/pokemon?limit=151&offset=0')
   },
   methods: {
     getPokemon(url){
@@ -53,6 +54,7 @@ export default {
         this.pokemons = response.data.results
         this.next = response.data.next
         this.previous = response.data.previous
+        // console.log(this.pokemons)
       }).catch((err) => {
         // console.log(err)
       })
@@ -61,21 +63,23 @@ export default {
       if(get === 'next'){
         this.getPokemon(this.next)
         window.scrollTo(0, 0);
+        this.busca = ''
       }else{
         this.getPokemon(this.previous)
         window.scrollTo(0, 0);
+        this.busca = ''
       }
-    }
+    },
+
   },
   computed: {
-    // resultadoBusca() {
-    //   if(this.busca == '' || this.busca == ' '){
-    //     return this.pokemons
-    //   }else{
-    //     console.log(this.pokemons.filter(pokemon => pokemon.name == this.busca))
-    //     return this.pokemons.filter(pokemon => pokemon.name == this.busca)
-    //   }
-    // }
+    resultadoBusca() {
+      if(this.busca == '' || this.busca == ' '){
+        return this.pokemons
+      }else{
+        return this.pokemons.filter(pokemon => pokemon.name == this.busca)
+      }
+    }
   }
 }
 </script>
